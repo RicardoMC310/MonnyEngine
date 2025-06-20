@@ -31,6 +31,8 @@ add_executable(tEngine
     src/Launcher/Launcher.cpp
     src/Engine/Engine.cpp
     src/Logger/Logger.cpp
+    src/LuaEngine/LuaEngine.cpp
+    src/Window/Window.cpp
 )
 
 target_include_directories(tEngine PRIVATE
