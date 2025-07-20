@@ -17,19 +17,48 @@ namespace Monny {
         virtual std::string getType() const { return "Event"; }
     };
 
-    class RequestCreateWindowEvent final : public Event {
+    class MomentCreateAFunctionInLuaEvent final : public Event {
     public:
-        std::string title;
-        uint width = 0, height = 0;
+        sol::state* lua;
 
-        std::string getType() const override { return "RequestCreateWindowEvent"; }
+        std::string getType() const override { return "MomentCreateAFunctionInLuaEvent"; }
     };
 
-    class OnEventUserInterface final : public Event {
+    class OnKeyEvent final : public Event {
     public:
-        SDL_Event event = {};
+        std::string type, key;
 
         std::string getType() const override { return "OnKeyEvent"; }
+    };
+
+    class OnMouseButtonEvent final : public Event {
+    public:
+        std::string button, state;
+        int x, y, clicks;
+
+        std::string getType() const override { return "OnMouseButtonEvent"; }
+    };
+
+    class OnMouseMotionEvent final : public Event {
+    public:
+        std::string state;
+        int x, y, xrel ,yrel;
+
+        std::string getType() const override { return "OnMouseMotionEvent"; }
+    };
+
+    class OnMouseWheelEvent final : public Event {
+    public:
+        int x, y, preciseX ,preciseY;
+
+        std::string getType() const override { return "OnMouseMotionEvent"; }
+    };
+
+    class WindowCreatedEvent final : public Event {
+    public:
+        SDL_Window* window;
+
+        std::string getType() const override { return "WindowCreatedEvent"; }
     };
 
     class SystemExitEvent final : public Event {

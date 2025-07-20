@@ -82,15 +82,6 @@ namespace Monny {
     }
 
     void LuaSystem::createFunctions() {
-        lua.set_function("createWindow", [&](std::string title, uint width, uint height) {
-            RequestCreateWindowEvent requestEvent;
-
-            requestEvent.title = std::move(title);
-            requestEvent.width = width;
-            requestEvent.height = height;
-
-            this->eventSystem->dispatch<RequestCreateWindowEvent>(requestEvent);
-        });
 
         lua.set_function("isKeyDown", [&](std::string key)-> bool {
             auto keyboardState = SDL_GetKeyboardState(nullptr);
@@ -110,17 +101,27 @@ namespace Monny {
             event.exitCode = code;
             this->eventSystem->dispatch<SystemExitEvent>(event);
         });
+
+        MomentCreateAFunctionInLuaEvent event;
+        event.lua = &this->lua;
+        this->eventSystem->dispatch<MomentCreateAFunctionInLuaEvent>(event);
     }
 
     void LuaSystem::onDistribitionUserEvents() {
-        this->eventSystem->listener<OnEventUserInterface>([&](const OnEventUserInterface& event) {
-            if (event.event.type == SDL_KEYDOWN) {
-                lua["onKeyDown"](SDL_GetKeyName(event.event.key.keysym.sym));
-            }
+        this->eventSystem->listener<OnKeyEvent>([&](const OnKeyEvent& event) {
+            lua["onKeyEvent"](event.type, event.key);
+        });
 
-            if (event.event.type == SDL_KEYUP) {
-                lua["onKeyUp"](SDL_GetKeyName(event.event.key.keysym.sym));
-            }
+        this->eventSystem->listener<OnMouseButtonEvent>([&](const OnMouseButtonEvent& event) {
+            lua["onMouseButton"](event.button, event.state, event.clicks, event.x, event.y);
+        });
+
+        this->eventSystem->listener<OnMouseMotionEvent>([&](const OnMouseMotionEvent& event) {
+            lua["onMouseMotion"](event.state, event.x, event.y, event.xrel, event.yrel);
+        });
+
+        this->eventSystem->listener<OnMouseWheelEvent>([&](const OnMouseWheelEvent& event) {
+            lua["onMouseWheel"](event.x, event.y, event.preciseX, event.preciseY);
         });
     }
 

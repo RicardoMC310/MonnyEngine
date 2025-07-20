@@ -8,9 +8,3 @@ end
 
 function onDestroy()
 end
-
-function onKeyUp(key)
-    if key == "Escape" then
-        exit(0)
-    end
-end

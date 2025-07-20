@@ -19,7 +19,9 @@ add_executable(MonnyEngine
         src/Lua/LuaSystem.cpp
         include/Lua/LuaSystem.h
         src/Window/WindowSystem.cpp
-        src/Window/WindowSystem.h
+        include/Window/WindowSystem.h
+        src/Renderer/RenderSystem.cpp
+        include/Renderer/RenderSystem.h
 )
 
 # Localize e linke bibliotecas
