@@ -4,16 +4,33 @@
 
 #ifndef RENDERSYSTEM_H
 #define RENDERSYSTEM_H
+#include <SDL2/SDL.h>
+
 #include "Core/ISystem.h"
 
 namespace Monny {
 
-class RenderSystem final : public ISystem {
-public:
-    void start() override;
-    void run() override;
-    void end() override;
-};
+    struct FrameBuffer {
+        SDL_Texture* texture = nullptr;
+        int width = 0, height = 0;
+    };
+
+    class RenderSystem final : public SubSystem {
+        FrameBuffer frameBuffer;
+        SDL_Renderer* renderer = nullptr;
+
+    public:
+        SDL_Window* windowRef;
+
+        RenderSystem(): renderer(nullptr), windowRef(nullptr) {
+        }
+
+        ~RenderSystem() = default;
+
+        void start() override;
+        void run() override;
+        void end() override;
+    };
 
 } // Manny
 

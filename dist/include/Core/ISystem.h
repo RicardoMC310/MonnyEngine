@@ -24,6 +24,10 @@ namespace Monny {
         virtual void end() = 0;
     };
 
+    class SubSystem : public ISystem {
+    public:
+    };
+
 }
 
 #endif //ISYSTEM_H

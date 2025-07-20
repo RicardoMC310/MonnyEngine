@@ -29,7 +29,7 @@ int main(int argc, char** argv) {
 
     core.addSystem("EventSystem", std::make_shared<Monny::EventSystem>());
     core.addSystem("WindowSystem", std::make_shared<Monny::WindowSystem>());
-    core.addSystem("RenderSystem", std::make_shared<Monny::RenderSystem>());
+    //core.addSystem("RenderSystem", std::make_shared<Monny::RenderSystem>());
     core.addSystem("LuaSystem", std::make_shared<Monny::LuaSystem>(argv[1]));
 
     core.setDependencie("WindowSystem", "LuaSystem");

@@ -6,11 +6,13 @@
 #define WINDOWSYSTEM_H
 #include <SDL2/SDL.h>
 #include "Core/ISystem.h"
+#include "Renderer/RenderSystem.h"
 
 namespace Monny {
 
 class WindowSystem final : public ISystem {
     SDL_Window* window = nullptr;
+    RenderSystem renderSystem;
 
 public:
     WindowSystem() = default;

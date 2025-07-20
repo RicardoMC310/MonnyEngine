@@ -54,13 +54,6 @@ namespace Monny {
         std::string getType() const override { return "OnMouseMotionEvent"; }
     };
 
-    class WindowCreatedEvent final : public Event {
-    public:
-        SDL_Window* window;
-
-        std::string getType() const override { return "WindowCreatedEvent"; }
-    };
-
     class SystemExitEvent final : public Event {
     public:
         int exitCode = 0;

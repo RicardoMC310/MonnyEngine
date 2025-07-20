@@ -17,22 +17,26 @@ namespace Monny {
         }
 
         this->eventSystem->listener<MomentCreateAFunctionInLuaEvent>([&](const MomentCreateAFunctionInLuaEvent& event) {
-            event.lua->set_function("createWindow", [&](std::string title, uint width, uint height) {
-                window = SDL_CreateWindow(
-                title.c_str(),
-                SDL_WINDOWPOS_CENTERED,
-                SDL_WINDOWPOS_CENTERED,
-                width, height,
-                SDL_WINDOW_SHOWN
-            );
+                event.lua->set_function("createWindow", [&](std::string title, uint width, uint height) {
+                    window = SDL_CreateWindow(
+                    title.c_str(),
+                    SDL_WINDOWPOS_CENTERED,
+                    SDL_WINDOWPOS_CENTERED,
+                    width, height,
+                    SDL_WINDOW_SHOWN
+                );
 
-            if (!window) {
-                logger.critical("Erro ao criar janela: {}", SDL_GetError());
-            }
+                if (!window) {
+                    logger.critical("Erro ao criar janela: {}", SDL_GetError());
+                }
 
-            WindowCreatedEvent createdEvent;
-            createdEvent.window = window;
-            this->eventSystem->dispatch<WindowCreatedEvent>(createdEvent);
+                renderSystem.name = "RenderSystem";
+                renderSystem.eventSystem = this->eventSystem;
+                renderSystem.logger = Logger("RenderSystem");
+                renderSystem.windowRef = window;
+
+                renderSystem.start();
+
             });
         });
 
@@ -119,10 +123,19 @@ namespace Monny {
                         break;
                 }
             }
+
+
+            renderSystem.run();
+
+            return;
         }
+        SystemExitEvent event;
+        event.exitCode = 0;
+        this->eventSystem->dispatch<SystemExitEvent>(event);
     }
 
     void WindowSystem::end() {
+        renderSystem.end();
         logger.info("Finalizando...");
         SDL_DestroyWindow(window);
         SDL_Quit();
