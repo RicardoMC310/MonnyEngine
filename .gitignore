@@ -1,4 +1,6 @@
 bin/
 build/
+build-win/
+.vscode/
 
 perf.*
