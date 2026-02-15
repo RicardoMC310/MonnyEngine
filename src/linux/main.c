@@ -7,16 +7,18 @@ int main(void)
         .window = {
             .title = "Default Title",
             .width = 800,
-            .height = 640
+            .height = 600
         },
         .target_fps = 60,
         .keybind_count = 0,
         .keybind_size = 0,
-        .keybinds = NULL
+        .keybinds = NULL,
+        .version = "1.0.0"
     };
 
     config_load(&config);
 
+    LOGGER_INFO("Config.Version = %s", config.version);
     LOGGER_INFO("Config.Title = %s", config.window.title);
     LOGGER_INFO("Config.Screen_Width = %d", config.window.width);
     LOGGER_INFO("Config.Screen_Height = %d", config.window.height);

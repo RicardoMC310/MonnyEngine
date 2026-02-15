@@ -26,16 +26,17 @@ typedef struct
     void (*parse_fn)(cJSON *item, void *ptr);
 } config_field_t;
 
+void parse_config(char *data, engine_config_t *out);
 void parse_window(cJSON *screen_object, void *out);
 void parse_keybinds(cJSON *keybinds_object, void *out);
 
 config_field_t fields[] = {
     {"window", offsetof(engine_config_t, window), TYPE_OBJECT, 0, parse_window},
     {"target_fps", offsetof(engine_config_t, target_fps), TYPE_INT, 0, NULL},
-    {"keybinds", offsetof(engine_config_t, keybinds), TYPE_ARRAY, 0, parse_keybinds}};
+    {"keybinds", offsetof(engine_config_t, keybinds), TYPE_ARRAY, 0, parse_keybinds},
+    {"version", offsetof(engine_config_t, version), TYPE_STRING, sizeof(((engine_config_t*)0)->version), NULL}
+};
 size_t num_fields = sizeof(fields) / sizeof(fields[0]);
-
-void parse_config(char *data, engine_config_t *out);
 
 void config_load(engine_config_t *out)
 {
@@ -181,14 +182,16 @@ void parse_config(char *data, engine_config_t *out)
         case TYPE_OBJECT:
         {
             if (cJSON_IsObject(item))
-                fields[i].parse_fn(item, out);
+                if (fields[i].parse_fn)
+                    fields[i].parse_fn(item, out);
             break;
         }
 
         case TYPE_ARRAY:
         {
             if (cJSON_IsArray(item))
-                fields[i].parse_fn(item, out);
+                if (fields[i].parse_fn)
+                    fields[i].parse_fn(item, out);
             break;
         }
 

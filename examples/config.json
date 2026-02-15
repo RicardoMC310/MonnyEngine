@@ -1,6 +1,15 @@
 {
-    "title": "Teste de Configuração em config.json",
-    "screen_width": 640,
-    "screen_height": 480,
-    "target_fps": 60
+    "window": {
+        "title": "Jogo Sério",
+        "width": 640,
+        "height": 480
+    },
+    "target_fps": 60,
+    "keybinds": [
+        {"action": "move_left",  "key": "KeyCode_A"},
+        {"action": "move_right", "key": "KeyCode_D"},
+        {"action": "move_up",    "key": "KeyCode_W"},
+        {"action": "move_down",  "key": "KeyCode_S"},
+        {"action": "jump",       "key": "KeyCode_Space"}
+    ]
 }
