@@ -7,3 +7,6 @@
 [submodule "vendor/SDL_image"]
 	path = vendor/SDL_image
 	url = git@github.com:libsdl-org/SDL_image.git
+[submodule "vendor/cJSON"]
+	path = vendor/cJSON
+	url = git@github.com:DaveGamble/cJSON.git
