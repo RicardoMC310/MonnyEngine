@@ -12,6 +12,8 @@ set(SDL_TEST OFF CACHE BOOL "" FORCE)
 set(SDL_TESTS OFF CACHE BOOL "" FORCE)
 set(SDL_WERROR OFF CACHE BOOL "" FORCE)
 
+set(CMAKE_BUILD_TYPE Debug)
+
 if (WIN32)
     set(PLATFORM win32)
 elseif(UNIX AND NOT WIN32)
@@ -21,6 +23,8 @@ else()
 endif()
 
 file(GLOB_RECURSE SOURCES "src/${PLATFORM}/*.c")
+
+list(APPEND SOURCES "vendor/cJSON/cJSON.c")
 
 add_subdirectory(vendor/lua)
 add_subdirectory(vendor/SDL)
@@ -32,6 +36,11 @@ target_link_libraries(mengine PRIVATE lua)
 target_link_libraries(mengine PRIVATE SDL3::SDL3)
 
 target_include_directories(mengine PRIVATE include)
+target_include_directories(mengine PRIVATE vendor/cJSON)
+
+target_compile_definitions(mengine PRIVATE
+    $<$<CONFIG:Debug>:DEBUG>
+)
 
 if (WIN32)
 

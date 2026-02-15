@@ -1,0 +1,6 @@
+{
+    "title": "Teste de Configuração em config.json",
+    "screen_width": 640,
+    "screen_height": 480,
+    "target_fps": 60
+}
