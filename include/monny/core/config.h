@@ -26,7 +26,9 @@ typedef struct engine_config_t {
     char version[MAX_CHARACTERS_IN_VERSION];
 } engine_config_t;
 
-void config_load(engine_config_t *out);
+
+engine_config_t config_load_defaults();
+void config_load_file(engine_config_t *out);
 void config_clear(engine_config_t *config);
 
 #endif

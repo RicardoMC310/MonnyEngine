@@ -38,7 +38,21 @@ config_field_t fields[] = {
 };
 size_t num_fields = sizeof(fields) / sizeof(fields[0]);
 
-void config_load(engine_config_t *out)
+engine_config_t config_load_defaults()
+{
+    return (engine_config_t) {
+		.window = {
+			.title = "Default Title",
+			.width = 800,
+			.height = 600},
+		.target_fps = 60,
+		.keybind_count = 0,
+		.keybind_size = 0,
+		.keybinds = NULL,
+		.version = "1.0.0"};
+}
+
+void config_load_file(engine_config_t *out)
 {
     out->keybind_size = 8;
     out->keybind_size = 0;
