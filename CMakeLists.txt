@@ -37,6 +37,7 @@ target_link_libraries(mengine PRIVATE SDL3::SDL3)
 
 target_include_directories(mengine PRIVATE include)
 target_include_directories(mengine PRIVATE vendor/cJSON)
+target_include_directories(mengine PRIVATE vendor/SDL/include)
 
 target_compile_definitions(mengine PRIVATE
     $<$<CONFIG:Debug>:DEBUG>

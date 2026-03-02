@@ -42,7 +42,7 @@ void config_load(engine_config_t *out)
 {
     out->keybind_size = 8;
     out->keybind_size = 0;
-    out->keybinds = malloc(sizeof(keybind_t) * out->keybind_size);
+    out->keybinds = malloc(sizeof(keybind_config_t) * out->keybind_size);
 
     FILE *config_file = fopen("config.json", "rb");
 
@@ -85,6 +85,16 @@ void config_load(engine_config_t *out)
     free(buffer);
 }
 
+void config_clear(engine_config_t *config)
+{
+    if (!config) return;
+
+    if (config->keybinds)
+        free(config->keybinds);
+
+    config->keybind_count = config->keybind_size = 0;
+}
+
 void parse_window(cJSON *screen_object, void *ptr)
 {
     engine_config_t *out = (engine_config_t *)ptr;
@@ -114,7 +124,7 @@ void parse_keybinds(cJSON *keybinds_object, void *ptr)
         if (out->keybind_count >= out->keybind_size)
         {
             out->keybind_size += 8;
-            out->keybinds = realloc(out->keybinds, sizeof(keybind_t) * out->keybind_size);
+            out->keybinds = realloc(out->keybinds, sizeof(keybind_config_t) * out->keybind_size);
         }
 
         cJSON *action = cJSON_GetObjectItem(kb, "action");
