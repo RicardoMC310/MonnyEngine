@@ -36,3 +36,13 @@ void engine_stop(engine_t *app)
 	free(app);
 	app = NULL;
 }
+
+void engine_update(engine_t *app)
+{
+	if (!app)
+		return;
+
+	while(!window_should_close(app->window)) {
+		window_listener_events(app->window);
+	}
+}

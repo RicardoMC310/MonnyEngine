@@ -4,6 +4,7 @@
 #define MAX_CHARACTERS_IN_TITLE 64
 #define MAX_CHARACTERS_IN_KEYBIND 64
 #define MAX_CHARACTERS_IN_VERSION 16
+#define MAX_CHARACTERS_IN_FILE_MAIN 256
 
 typedef struct keybind_config_t
 {
@@ -24,8 +25,8 @@ typedef struct engine_config_t {
     int keybind_count;
     int keybind_size;
     char version[MAX_CHARACTERS_IN_VERSION];
+    char file_main[MAX_CHARACTERS_IN_FILE_MAIN];
 } engine_config_t;
-
 
 engine_config_t config_load_defaults();
 void config_load_file(engine_config_t *out);

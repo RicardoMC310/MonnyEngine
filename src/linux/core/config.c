@@ -34,28 +34,29 @@ config_field_t fields[] = {
     {"window", offsetof(engine_config_t, window), TYPE_OBJECT, 0, parse_window},
     {"target_fps", offsetof(engine_config_t, target_fps), TYPE_INT, 0, NULL},
     {"keybinds", offsetof(engine_config_t, keybinds), TYPE_ARRAY, 0, parse_keybinds},
-    {"version", offsetof(engine_config_t, version), TYPE_STRING, sizeof(((engine_config_t*)0)->version), NULL}
-};
+    {"version", offsetof(engine_config_t, version), TYPE_STRING, sizeof(((engine_config_t *)0)->version), NULL},
+    {"file_main", offsetof(engine_config_t, file_main), TYPE_STRING, sizeof(((engine_config_t *)0)->file_main), NULL}};
 size_t num_fields = sizeof(fields) / sizeof(fields[0]);
 
 engine_config_t config_load_defaults()
 {
-    return (engine_config_t) {
-		.window = {
-			.title = "Default Title",
-			.width = 800,
-			.height = 600},
-		.target_fps = 60,
-		.keybind_count = 0,
-		.keybind_size = 0,
-		.keybinds = NULL,
-		.version = "1.0.0"};
+    return (engine_config_t){
+        .window = {
+            .title = "Default Title",
+            .width = 800,
+            .height = 600},
+        .target_fps = 60,
+        .keybind_count = 0,
+        .keybind_size = 0,
+        .keybinds = NULL,
+        .version = "1.0.0",
+        .file_main = "main.lua"};
 }
 
 void config_load_file(engine_config_t *out)
 {
     out->keybind_size = 8;
-    out->keybind_size = 0;
+    out->keybind_count = 0;
     out->keybinds = malloc(sizeof(keybind_config_t) * out->keybind_size);
 
     FILE *config_file = fopen("config.json", "rb");
@@ -101,7 +102,8 @@ void config_load_file(engine_config_t *out)
 
 void config_clear(engine_config_t *config)
 {
-    if (!config) return;
+    if (!config)
+        return;
 
     if (config->keybinds)
         free(config->keybinds);

@@ -1,5 +1,6 @@
 {
     "version": "1.0.0",
+    "file_main": "main.lua",
     "window": {
         "title": "Jogo Sério",
         "width": 640,
