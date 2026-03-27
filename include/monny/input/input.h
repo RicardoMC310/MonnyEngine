@@ -12,6 +12,8 @@ void input_destroy(input_t *input);
 void input_listener_event(input_t *input);
 u8 input_should_quit(input_t *input);
 
-u8 input_keydown(input_t *input, const char *action);
+u8 input_key_down(input_t *input, const char *action);
+u8 input_key_pressed(input_t *input, const char *action);
+u8 input_key_released(input_t *input, const char *action);
 
 #endif

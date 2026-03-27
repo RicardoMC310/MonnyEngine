@@ -22,6 +22,7 @@ struct input_t
 
     u8 keys[SDL_SCANCODE_COUNT];
     u8 keys_pressed[SDL_SCANCODE_COUNT];
+    u8 keys_released[SDL_SCANCODE_COUNT];
 
     u8 should_quit;
 };
@@ -78,6 +79,7 @@ void input_listener_event(input_t *input)
     SDL_Event event;
 
     memset(input->keys_pressed, 0, sizeof(input->keys_pressed));
+    memset(input->keys_released, 0, sizeof(input->keys_released));
 
     while (SDL_PollEvent(&event))
     {
@@ -94,13 +96,16 @@ void input_listener_event(input_t *input)
                 input->keys_pressed[sc] = 1;
 
             input->keys[sc] = 1;
-
             break;
         }
+
         case SDL_EVENT_KEY_UP:
         {
             SDL_Scancode sc = event.key.scancode;
+
             input->keys[sc] = 0;
+            input->keys_released[sc] = 1;
+
             break;
         }
         }
@@ -115,15 +120,48 @@ u8 input_should_quit(input_t *input)
     return input->should_quit;
 }
 
-u8 input_keydown(input_t *input, const char *action)
+u8 input_key_down(input_t *input, const char *action)
 {
     u32 hash = hash_string(action);
 
     for (usize i = 0; i < input->keybind_count; i++)
     {
-        if (input->keybinds[i].action_hash == hash && strcmp(input->keybinds[i].action, action) == 0)
+        if (input->keybinds[i].action_hash == hash &&
+            strcmp(input->keybinds[i].action, action) == 0)
         {
             return input->keys[input->keybinds[i].scancode];
+        }
+    }
+
+    return 0;
+}
+
+u8 input_key_pressed(input_t *input, const char *action)
+{
+    u32 hash = hash_string(action);
+
+    for (usize i = 0; i < input->keybind_count; i++)
+    {
+        if (input->keybinds[i].action_hash == hash &&
+            strcmp(input->keybinds[i].action, action) == 0)
+        {
+            return input->keys_pressed[input->keybinds[i].scancode];
+        }
+    }
+
+    return 0;
+}
+
+u8 input_key_released(input_t *input, const char *action)
+{
+    u32 hash = hash_string(action);
+
+    for (usize i = 0; i < input->keybind_count; i++)
+    {
+        if (input->keybinds[i].action_hash == hash &&
+            strcmp(input->keybinds[i].action, action) == 0)
+        {
+            return input->keys_released[input->keybinds[i].scancode];
         }
     }
 

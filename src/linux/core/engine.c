@@ -3,6 +3,8 @@
 #include <monny/window/window.h>
 #include <monny/input/input.h>
 
+#include <SDL3/SDL.h>
+
 #include <stdlib.h>
 
 struct engine_t
@@ -53,22 +55,26 @@ void engine_update(engine_t *app)
 
 		input_listener_event(app->input);
 
-		if (input_keydown(app->input, "move_left")) {
+		if (input_key_down(app->input, "move_left")) {
 			LOGGER_INFO("Andando Para Esquerda");
-		} else if (input_keydown(app->input, "move_right")) {
+		} else if (input_key_down(app->input, "move_right")) {
 			LOGGER_INFO("Andando Para Direita");
 		}
 
-		if (input_keydown(app->input, "move_up")) {
+		if (input_key_down(app->input, "move_up")) {
 			LOGGER_INFO("Andando Para Cima");
-		} else if (input_keydown(app->input, "move_down")) {
+		} else if (input_key_down(app->input, "move_down")) {
 			LOGGER_INFO("Andando Para Baixo");
 		}
 
-		if (input_keydown(app->input, "jump")) {
-			LOGGER_INFO("Pulando");
-		} else if (input_keydown(app->input, "attack")) {
-			LOGGER_INFO("Atacando");
+		if (input_key_pressed(app->input, "jump")) {
+			LOGGER_INFO("Pulou");
 		}
+
+		if (input_key_released(app->input, "attack")) {
+			LOGGER_INFO("Atacou");
+		}
+
+		SDL_Delay(1000 / app->config->target_fps);
 	}
 }
