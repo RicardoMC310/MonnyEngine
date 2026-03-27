@@ -9,7 +9,6 @@
 struct window_t
 {
     SDL_Window *sdlWindow;
-    u8 shouldClose;
 };
 
 int init_window_main_system();
@@ -69,32 +68,6 @@ void window_destroy(window_t *window)
 
     free(window);
     window = NULL;
-}
-
-u8 window_should_close(window_t *window)
-{
-    if (!window)
-        return false;
-
-    return window->shouldClose;
-}
-
-void window_listener_events(window_t *window)
-{
-    if (!window)
-        return;
-
-    SDL_Event event;
-    while (SDL_PollEvent(&event))
-    {
-        switch(event.type) {
-            case SDL_EVENT_QUIT:
-            {
-                window->shouldClose = true;
-                break;
-            }
-        }
-    }
 }
 
 int init_window_main_system()

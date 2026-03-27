@@ -63,7 +63,7 @@ void config_load_file(engine_config_t *out)
 
     if (!config_file)
     {
-        LOGGER_ERROR("Arquivo config.json encontra-se ausente");
+        LOGGER_WARN("Arquivo config.json encontra-se ausente; Carregando configurações padrões.");
         return;
     }
 
