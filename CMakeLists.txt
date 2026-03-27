@@ -26,7 +26,7 @@ file(GLOB_RECURSE SOURCES "src/${PLATFORM}/*.c")
 
 list(APPEND SOURCES "vendor/cJSON/cJSON.c")
 
-add_subdirectory(vendor/lua)
+add_subdirectory(external/lua-wrapper)
 add_subdirectory(vendor/SDL)
 add_subdirectory(vendor/SDL_image)
 

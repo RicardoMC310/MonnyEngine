@@ -6,6 +6,7 @@
 typedef struct engine_t engine_t;
 
 engine_t *engine_init(engine_config_t *config);
-void engine_stop(engine_t *engine);
+void engine_stop(engine_t *app);
+void engine_update(engine_t *app);
 
 #endif
