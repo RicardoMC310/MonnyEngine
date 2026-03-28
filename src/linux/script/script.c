@@ -124,6 +124,11 @@ void script_pushboolean(script_wt *wt, int value)
     lua_pushboolean(wt->L, value);
 }
 
+void script_pushnumber(script_wt *wt, double value)
+{
+    lua_pushnumber(wt->L, value);
+}
+
 void *script_get_context(script_wt *wt)
 {
     return wt->ctx;

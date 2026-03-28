@@ -19,6 +19,7 @@ void script_register_function(
 const char *script_checkstring(script_wt *wt, int index);
 int script_checkint(script_wt *wt, int index);
 void script_pushboolean(script_wt *wt, int value);
+void script_pushnumber(script_wt *wt, double value);
 void *script_get_context(script_wt *wt);
 
 #endif

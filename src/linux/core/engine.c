@@ -14,6 +14,10 @@ struct engine_t
 	window_t *window;
 	input_t *input;
 	script_t *script;
+
+	f64 fps;
+	f64 fps_accum;
+	f64 fps_count;
 };
 
 engine_t *engine_init(engine_config_t *config)
@@ -33,6 +37,7 @@ engine_t *engine_init(engine_config_t *config)
 	app->script = script_create(app->config->file_main);
 
 	input_script_register(app->script, app->input);
+	engine_script_register(app->script, app);
 
 	return app;
 }
@@ -60,12 +65,49 @@ void engine_update(engine_t *app)
 	if (!app)
 		return;
 
-	while(!input_should_quit(app->input)) {
+	Uint64 freq = SDL_GetPerformanceFrequency();
+	Uint64 last = SDL_GetPerformanceCounter();
 
+	app->fps = 0.0;
+
+	while (!input_should_quit(app->input))
+	{
+		Uint64 current = SDL_GetPerformanceCounter();
+
+		f64 deltaTime = (f64)(current - last) / (f64)freq;
+		last = current;
+
+		if (deltaTime <= 0.000001)
+			deltaTime = 0.000001; // anti-inf
+
+		app->fps_accum += deltaTime;
+		app->fps_count++;
+
+		if (app->fps_accum >= 1.0)
+		{
+			app->fps = app->fps_count;
+			app->fps_count = 0;
+			app->fps_accum = 0;
+		}
 		input_listener_event(app->input);
+		script_update(app->script, deltaTime);
 
-		script_update(app->script, 0);
+		Uint64 frame_time = SDL_GetPerformanceCounter() - current;
+		double frame_sec = (double)frame_time / freq;
 
-		SDL_Delay(1000 / app->config->target_fps);
+		double target = 1.0 / app->config->target_fps;
+
+		if (frame_sec < target)
+		{
+			SDL_Delay((Uint32)((target - frame_sec) * 1000.0));
+		}
 	}
+}
+
+f64 engine_get_fps(engine_t *engine)
+{
+	if (!engine)
+		return 0.0;
+
+	return engine->fps;
 }
