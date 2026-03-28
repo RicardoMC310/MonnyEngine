@@ -5,6 +5,9 @@
 #define MAX_CHARACTERS_IN_KEYBIND 64
 #define MAX_CHARACTERS_IN_VERSION 16
 #define MAX_CHARACTERS_IN_FILE_MAIN 256
+#define MAX_CHARACTERS_IN_ASSET_FILE 256
+
+#include <monny/core/assets_config.h>
 
 typedef struct keybind_config_t
 {
@@ -26,6 +29,9 @@ typedef struct engine_config_t {
     int keybind_size;
     char version[MAX_CHARACTERS_IN_VERSION];
     char file_main[MAX_CHARACTERS_IN_FILE_MAIN];
+    char asset_file[MAX_CHARACTERS_IN_ASSET_FILE];
+
+    asset_config_t asset_config;
 } engine_config_t;
 
 engine_config_t config_load_defaults();

@@ -26,7 +26,7 @@ typedef struct
     void (*parse_fn)(cJSON *item, void *ptr);
 } config_field_t;
 
-void parse_config(char *data, engine_config_t *out);
+static void parse_config(char *data, engine_config_t *out);
 void parse_window(cJSON *screen_object, void *out);
 void parse_keybinds(cJSON *keybinds_object, void *out);
 
@@ -35,7 +35,8 @@ config_field_t fields[] = {
     {"target_fps", offsetof(engine_config_t, target_fps), TYPE_INT, 0, NULL},
     {"keybinds", offsetof(engine_config_t, keybinds), TYPE_ARRAY, 0, parse_keybinds},
     {"version", offsetof(engine_config_t, version), TYPE_STRING, sizeof(((engine_config_t *)0)->version), NULL},
-    {"file_main", offsetof(engine_config_t, file_main), TYPE_STRING, sizeof(((engine_config_t *)0)->file_main), NULL}};
+    {"file_main", offsetof(engine_config_t, file_main), TYPE_STRING, sizeof(((engine_config_t *)0)->file_main), NULL},
+    {"asset_file", offsetof(engine_config_t, asset_file), TYPE_STRING, sizeof(((engine_config_t *)0)->asset_file), NULL}};
 size_t num_fields = sizeof(fields) / sizeof(fields[0]);
 
 engine_config_t config_load_defaults()
@@ -50,7 +51,9 @@ engine_config_t config_load_defaults()
         .keybind_size = 0,
         .keybinds = NULL,
         .version = "1.0.0",
-        .file_main = "main.lua"};
+        .file_main = "main.lua",
+        .asset_file = "assets.json",
+        .asset_config = assets_config_load_defaults()};
 }
 
 void config_load_file(engine_config_t *out)
@@ -133,11 +136,11 @@ void parse_keybinds(cJSON *keybinds_object, void *ptr)
 {
     engine_config_t *out = (engine_config_t *)ptr;
 
-    size_t i = 0;
+    int i = 0;
     cJSON *kb = NULL;
     cJSON_ArrayForEach(kb, keybinds_object)
     {
-        if (out->keybind_count >= out->keybind_size)
+        if (i >= out->keybind_size)
         {
             out->keybind_size += 8;
             out->keybinds = realloc(out->keybinds, sizeof(keybind_config_t) * out->keybind_size);
@@ -157,7 +160,7 @@ void parse_keybinds(cJSON *keybinds_object, void *ptr)
     out->keybind_count = i;
 }
 
-void parse_config(char *data, engine_config_t *out)
+static void parse_config(char *data, engine_config_t *out)
 {
     if (!data)
     {
