@@ -34,6 +34,7 @@ add_executable(mengine ${SOURCES})
 
 target_link_libraries(mengine PRIVATE lua)
 target_link_libraries(mengine PRIVATE SDL3::SDL3)
+target_link_libraries(mengine PRIVATE m)
 
 target_include_directories(mengine PRIVATE include)
 target_include_directories(mengine PRIVATE vendor/cJSON)

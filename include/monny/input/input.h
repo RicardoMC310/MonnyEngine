@@ -3,6 +3,7 @@
 
 #include <monny/types.h>
 #include <monny/core/config.h>
+#include <monny/script/script.h>
 
 typedef struct input_t input_t;
 
@@ -15,5 +16,7 @@ u8 input_should_quit(input_t *input);
 u8 input_key_down(input_t *input, const char *action);
 u8 input_key_pressed(input_t *input, const char *action);
 u8 input_key_released(input_t *input, const char *action);
+
+void input_script_register(script_t *script, input_t *input);
 
 #endif

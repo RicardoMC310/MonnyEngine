@@ -12,7 +12,8 @@
         {"action": "move_right", "key": "D"},
         {"action": "move_up",    "key": "W"},
         {"action": "move_down",  "key": "S"},
-        {"action": "jump",       "key": "K"},
-        {"action": "attack",     "key": "L"}
+        {"action": "jump",       "key": "L"},
+        {"action": "attack",     "key": "K"},
+        {"action": "special",    "key": "O"}
     ]
 }
