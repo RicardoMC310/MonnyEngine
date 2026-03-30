@@ -30,11 +30,15 @@ add_subdirectory(external/lua-wrapper)
 add_subdirectory(vendor/SDL)
 add_subdirectory(vendor/SDL_image)
 
+add_library(glad STATIC vendor/glad/src/glad.c)
+target_include_directories(glad PUBLIC vendor/glad/include)
+
 add_executable(mengine ${SOURCES})
 
 target_link_libraries(mengine PRIVATE lua)
 target_link_libraries(mengine PRIVATE SDL3::SDL3)
 target_link_libraries(mengine PRIVATE m)
+target_link_libraries(mengine PRIVATE glad)
 
 target_include_directories(mengine PRIVATE include)
 target_include_directories(mengine PRIVATE vendor/cJSON)

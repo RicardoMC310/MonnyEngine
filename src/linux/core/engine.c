@@ -3,6 +3,8 @@
 #include <monny/window/window.h>
 #include <monny/input/input.h>
 #include <monny/script/script.h>
+#include <monny/renderer/renderer.h>
+#include <monny/scene/scene.h>
 
 #include <SDL3/SDL.h>
 
@@ -14,6 +16,7 @@ struct engine_t
 	window_t *window;
 	input_t *input;
 	script_t *script;
+	renderer_t *renderer;
 
 	f64 fps;
 	f64 fps_accum;
@@ -30,11 +33,15 @@ engine_t *engine_init(engine_config_t *config)
 	}
 
 	app->config = config;
+
+	app->renderer = renderer_init();
 	app->window = window_create(&app->config->window);
 
 	app->input = input_create(app->config->keybinds, app->config->keybind_count);
 
 	app->script = script_create(app->config->file_main);
+
+	renderer_create_context(app->renderer, app->window);
 
 	input_script_register(app->script, app->input);
 	engine_script_register(app->script, app);
@@ -56,6 +63,9 @@ void engine_stop(engine_t *app)
 	if (app->script)
 		script_destroy(app->script);
 
+	if (app->renderer)
+		renderer_destroy(app->renderer);
+
 	free(app);
 	app = NULL;
 }
@@ -69,6 +79,8 @@ void engine_update(engine_t *app)
 	Uint64 last = SDL_GetPerformanceCounter();
 
 	app->fps = 0.0;
+
+	scene_t scene;
 
 	while (!input_should_quit(app->input))
 	{
@@ -91,6 +103,10 @@ void engine_update(engine_t *app)
 		}
 		input_listener_event(app->input);
 		script_update(app->script, deltaTime);
+
+		renderer_begin(app->renderer);
+		scene_render(&scene, app->renderer);
+		renderer_end(app->renderer);
 
 		Uint64 frame_time = SDL_GetPerformanceCounter() - current;
 		double frame_sec = (double)frame_time / freq;

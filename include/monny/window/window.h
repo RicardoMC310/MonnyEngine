@@ -8,5 +8,6 @@ typedef struct window_t window_t;
 
 window_t *window_create(window_config_t *window_config);
 void window_destroy(window_t *window);
+void *window_get_raw_window(window_t *window);
 
 #endif

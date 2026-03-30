@@ -40,7 +40,7 @@ window_t *window_create(window_config_t *window_config)
         window_config->title,
         window_config->width,
         window_config->height,
-        0);
+        SDL_WINDOW_OPENGL);
     if (!window->sdlWindow)
     {
         free(window);
@@ -50,7 +50,7 @@ window_t *window_create(window_config_t *window_config)
 
     number_of_the_window++;
 
-    return window;
+    return (void *)window->sdlWindow;
 }
 
 void window_destroy(window_t *window)
@@ -63,11 +63,18 @@ void window_destroy(window_t *window)
 
     if (number_of_the_window <= 0)
     {
-        SDL_Quit();
+        // SDL_Quit();
     }
 
     free(window);
     window = NULL;
+}
+
+void *window_get_raw_window(window_t *window)
+{
+    if (!window) return NULL;
+
+    return window;
 }
 
 int init_window_main_system()
