@@ -8,15 +8,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define MAX_COMMANDS 1024
-
 struct renderer_t
 {
     window_t *window;
     SDL_GLContext context;
 
-    renderer_command_t g_commands[MAX_COMMANDS];
-    u32 g_count;
+    renderer_command_t *g_commands;
+    usize g_count;
+    usize g_capacity;
 };
 
 renderer_t *renderer_init()
@@ -43,6 +42,16 @@ renderer_t *renderer_init()
 
     SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
 
+    renderer->g_capacity = 1024;
+    renderer->g_commands = calloc(renderer->g_capacity, sizeof(renderer_command_t));
+    if (!renderer->g_commands)
+    {
+        perror("calloc g_commands");
+        free(renderer);
+        return NULL;
+    }
+    renderer->g_count = 0;
+
     return renderer;
 }
 
@@ -50,6 +59,9 @@ void renderer_destroy(renderer_t *renderer)
 {
     if (!renderer)
         return;
+
+    if (renderer->g_commands)
+        free(renderer->g_commands);
 
     if (renderer->context)
         SDL_GL_DestroyContext(renderer->context);
@@ -88,11 +100,18 @@ void renderer_begin(renderer_t *renderer)
 
 void renderer_submit(renderer_t *renderer, renderer_command_t *cmd)
 {
-    if (!renderer)
+    if (!renderer || !cmd)
         return;
 
-    if (renderer->g_count >= MAX_COMMANDS)
-        return;
+    if (renderer->g_count >= renderer->g_capacity)
+    {
+        usize new_capacity = renderer->g_capacity * 2;
+        renderer_command_t *new_cmds = realloc(renderer->g_commands, new_capacity * sizeof(renderer_command_t));
+        if (!new_cmds)
+            return;
+        renderer->g_commands = new_cmds;
+        renderer->g_capacity = new_capacity;
+    }
 
     renderer->g_commands[renderer->g_count++] = *cmd;
 }
@@ -106,8 +125,9 @@ void renderer_end(renderer_t *renderer)
         renderer_command_t *cmd = &renderer->g_commands[i];
 
         glClearColor(cmd->bg_color[0], cmd->bg_color[1], cmd->bg_color[2], 1.0);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     }
+
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
     SDL_GL_SwapWindow(window_get_raw_window(renderer->window));
 }

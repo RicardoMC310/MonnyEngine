@@ -3,3 +3,5 @@ build-win/
 .vscode/
 
 perf.*
+
+.cache
