@@ -14,9 +14,6 @@
 struct script_t
 {
     lua_State *L;
-    int ref_setup;
-    int ref_update;
-    int ref_stop;
 };
 
 struct script_wt {
@@ -25,8 +22,6 @@ struct script_wt {
 };
 
 static int script_mock_print(lua_State *L);
-int script_load_ref_function(script_t *script, const char *func_name);
-void script_call_ref_function(script_t *script, int ref, const char *sig, ...);
 static int script_dispatch(lua_State *L);
 
 script_t *script_create(const char *filepath)
@@ -51,11 +46,11 @@ script_t *script_create(const char *filepath)
         return NULL;
     }
 
-    script->ref_setup = script_load_ref_function(script, "onSetup");
-    script->ref_update = script_load_ref_function(script, "onUpdate");
-    script->ref_stop = script_load_ref_function(script, "onStop");
+    // script->ref_setup = script_load_ref_function(script, "onSetup");
+    // script->ref_update = script_load_ref_function(script, "onUpdate");
+    // script->ref_stop = script_load_ref_function(script, "onStop");
 
-    script_call_ref_function(script, script->ref_setup, "");
+    // script_call_ref_function(script, script->ref_setup, "");
 
     return script;
 }
@@ -65,19 +60,11 @@ void script_destroy(script_t *script)
     if (!script)
         return;
 
-    script_call_ref_function(script, script->ref_stop, "");
+    // script_call_ref_function(script, script->ref_stop, "");
 
     lua_close(script->L);
     free(script);
     script = NULL;
-}
-
-void script_update(script_t *script, double deltaTime)
-{
-    if (!script)
-        return;
-
-    script_call_ref_function(script, script->ref_update, "d", deltaTime);
 }
 
 void script_register_function(

@@ -80,6 +80,13 @@ scene_t *scene_manager_get_current_scene(scene_manager_t *sm)
     return &sm->scenes[handle_get_index(sm->scene_current)];
 }
 
+scene_t *scene_manager_get_scene(scene_manager_t *sm, handle_t handle_scene)
+{
+    if (!sm)
+        return NULL;
+    return &sm->scenes[handle_get_index(handle_scene)];
+}
+
 void scene_manager_swap_current_scene(scene_manager_t *sm, handle_t handle_scene)
 {
     if (!sm)

@@ -20,6 +20,10 @@ struct engine_t
 	renderer_t *renderer;
 	scene_manager_t *scene_manager;
 
+	u32 ref_func_script_onSetup;
+	u32 ref_func_script_onUpdate;
+	u32 ref_func_script_onStop;
+
 	f64 fps;
 	f64 fps_accum;
 	f64 fps_count;
@@ -52,6 +56,12 @@ engine_t *engine_init(engine_config_t *config)
 
 	scene_manager_script_register(app->script, app->scene_manager);
 
+	app->ref_func_script_onSetup = script_load_ref_function(app->script, "onSetup");
+	app->ref_func_script_onUpdate = script_load_ref_function(app->script, "onUpdate");
+	app->ref_func_script_onStop= script_load_ref_function(app->script, "onStop");
+
+	script_call_ref_function(app->script, app->ref_func_script_onSetup, "");
+
 	return app;
 }
 
@@ -59,6 +69,8 @@ void engine_stop(engine_t *app)
 {
 	if (!app)
 		return;
+
+	script_call_ref_function(app->script, app->ref_func_script_onStop, "");
 
 	if (app->window)
 		window_destroy(app->window);
@@ -112,7 +124,7 @@ void engine_update(engine_t *app)
 			app->fps_accum = 0;
 		}
 		input_listener_event(app->input);
-		script_update(app->script, deltaTime);
+		script_call_ref_function(app->script, app->ref_func_script_onUpdate, "d", deltaTime);
 
 		renderer_begin(app->renderer);
 		scene_t *current_scene = scene_manager_get_current_scene(app->scene_manager);

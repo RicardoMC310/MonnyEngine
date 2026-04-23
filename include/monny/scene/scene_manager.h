@@ -13,6 +13,7 @@ void scene_manager_destroy(scene_manager_t *sm);
 
 handle_t scene_manager_new_scene(scene_manager_t *sm, const char *name);
 scene_t *scene_manager_get_current_scene(scene_manager_t *sm);
+scene_t *scene_manager_get_scene(scene_manager_t *sm, handle_t handle_scene);
 void scene_manager_swap_current_scene(scene_manager_t *sm, handle_t handle_scene);
 
 void scene_manager_script_register(script_t *script, scene_manager_t *engine);
