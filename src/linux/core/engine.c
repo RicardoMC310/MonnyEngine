@@ -1,33 +1,14 @@
 #include <monny/core/engine.h>
 #include <monny/core/logger.h>
-#include <monny/window/window.h>
-#include <monny/input/input.h>
-#include <monny/script/script.h>
-#include <monny/renderer/renderer.h>
-#include <monny/scene/scene.h>
-#include <monny/scene/scene_manager.h>
 
 #include <SDL3/SDL.h>
 
 #include <stdlib.h>
 
-struct engine_t
-{
-	engine_config_t *config;
-	window_t *window;
-	input_t *input;
-	script_t *script;
-	renderer_t *renderer;
-	scene_manager_t *scene_manager;
-
-	u32 ref_func_script_onSetup;
-	u32 ref_func_script_onUpdate;
-	u32 ref_func_script_onStop;
-
-	f64 fps;
-	f64 fps_accum;
-	f64 fps_count;
-};
+// struct engine_t
+// {
+	
+// };
 
 engine_t *engine_init(engine_config_t *config)
 {
@@ -51,14 +32,11 @@ engine_t *engine_init(engine_config_t *config)
 
 	renderer_create_context(app->renderer, app->window);
 
-	input_script_register(app->script, app->input);
-	engine_script_register(app->script, app);
-
-	scene_manager_script_register(app->script, app->scene_manager);
+	script_init_modules(app->script, app);
 
 	app->ref_func_script_onSetup = script_load_ref_function(app->script, "onSetup");
 	app->ref_func_script_onUpdate = script_load_ref_function(app->script, "onUpdate");
-	app->ref_func_script_onStop= script_load_ref_function(app->script, "onStop");
+	app->ref_func_script_onStop = script_load_ref_function(app->script, "onStop");
 
 	script_call_ref_function(app->script, app->ref_func_script_onSetup, "");
 
@@ -99,8 +77,12 @@ void engine_update(engine_t *app)
 	Uint64 freq = SDL_GetPerformanceFrequency();
 	Uint64 last = SDL_GetPerformanceCounter();
 
-	handle_t main_scene = scene_manager_new_scene(app->scene_manager, "mainscene");
-	scene_manager_swap_current_scene(app->scene_manager, main_scene);
+	// handle_t main_scene = scene_manager_new_scene(app->scene_manager, "mainscene");
+	// scene_manager_swap_current_scene(app->scene_manager, main_scene);
+
+	if (!scene_manager_get_current_scene(app->scene_manager)) {
+		LOGGER_WARN("No current scene!, default scene selected");
+	}
 
 	app->fps = 0.0;
 
@@ -128,6 +110,19 @@ void engine_update(engine_t *app)
 
 		renderer_begin(app->renderer);
 		scene_t *current_scene = scene_manager_get_current_scene(app->scene_manager);
+		if (!current_scene)
+		{
+			current_scene = &(scene_t) {
+				.name = "Default Scnee",
+				.r = 0,
+				.g = 0,
+				.b = 0
+			};
+		}
+		// LOGGER_INFO("RENDER: %f %f %f",
+		// 			current_scene->r,
+		// 			current_scene->g,
+		// 			current_scene->b);
 		scene_render(current_scene, app->renderer);
 		renderer_end(app->renderer);
 
