@@ -113,7 +113,8 @@ void renderer_submit(renderer_t *renderer, renderer_command_t *cmd)
         renderer->g_capacity = new_capacity;
     }
 
-    renderer->g_commands[renderer->g_count++] = *cmd;
+    // renderer->g_commands[renderer->g_count++] = *cmd;
+    memcpy(&renderer->g_commands[renderer->g_count++], cmd, sizeof(*cmd));
 }
 
 void renderer_end(renderer_t *renderer)
@@ -121,13 +122,12 @@ void renderer_end(renderer_t *renderer)
     if (!renderer)
         return;
 
-    for (u32 i = 0; i < renderer->g_count; i++) {
+    for (usize i = 0; i < renderer->g_count; i++) {
         renderer_command_t *cmd = &renderer->g_commands[i];
 
-        glClearColor(cmd->bg_color[0], cmd->bg_color[1], cmd->bg_color[2], 1.0);
+        glClearColor(cmd->r, cmd->g, cmd->b, 1.0);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     }
-
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
     SDL_GL_SwapWindow(window_get_raw_window(renderer->window));
 }

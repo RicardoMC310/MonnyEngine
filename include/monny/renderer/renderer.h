@@ -5,7 +5,9 @@
 #include <monny/window/window.h>
 
 typedef struct renderer_command_t {
-    f32 bg_color[3];
+    f32 r;
+    f32 g;
+    f32 b;
 } renderer_command_t;
 
 typedef struct renderer_t renderer_t;
