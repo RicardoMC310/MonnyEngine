@@ -1,5 +1,6 @@
 #include <monny/script/script.h>
 #include <monny/input/input.h>
+#include <monny/core/engine.h>
 
 static int l_input_key_down(script_wt* wt) {
     input_t *input = script_get_context(wt);
@@ -58,3 +59,14 @@ void input_script_register(script_t *script, input_t *input)
         input             // contexto
     );
 }
+
+static void input_module_resgiter(script_t *script, engine_t *engine)
+{
+    input_script_register(script, engine->input);
+}
+
+script_module_t input_module = {
+    .name = "input",
+    .registry_func = input_module_resgiter};
+
+REGISTER_MODULE(input_module)
