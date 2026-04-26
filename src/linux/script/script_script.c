@@ -13,6 +13,9 @@ static int l_script_load(script_wt *wt)
     /* sandbox básico */
     script_newtable(wt);
 
+    script_get_global(wt, "math");
+    script_setfield(wt, -2, "math");
+
     script_get_global(wt, "print");
     script_setfield(wt, -2, "print");
 

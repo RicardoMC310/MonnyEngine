@@ -3,7 +3,7 @@
 #include <monny/scene/scene_manager.h>
 #include <monny/core/engine.h>
 
-int l_scene_set_background(script_wt *wt)
+static int l_scene_set_background(script_wt *wt)
 {
     scene_manager_t *sm = script_get_context(wt);
 
@@ -27,7 +27,7 @@ int l_scene_set_background(script_wt *wt)
     return 0;
 }
 
-int l_scene_get_name(script_wt *wt)
+static int l_scene_get_name(script_wt *wt)
 {
     scene_manager_t *sm = script_get_context(wt);
 
@@ -47,7 +47,7 @@ int l_scene_get_name(script_wt *wt)
     return 1;
 }
 
-void scene_script_register(script_t *script, scene_manager_t *sm)
+static void scene_script_register(script_t *script, scene_manager_t *sm)
 {
     script_register_metatable_function(
         script,
