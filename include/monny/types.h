@@ -30,4 +30,7 @@ typedef bool b8;
 typedef size_t usize;
 typedef ptrdiff_t isize;
 
+/* Types to casting from void* */
+typedef uintptr_t uiptr;
+
 #endif
