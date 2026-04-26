@@ -17,6 +17,4 @@ u8 input_key_down(input_t *input, const char *action);
 u8 input_key_pressed(input_t *input, const char *action);
 u8 input_key_released(input_t *input, const char *action);
 
-void input_script_register(script_t *script, input_t *input);
-
 #endif
