@@ -58,14 +58,19 @@ handle_t scene_manager_new_scene(scene_manager_t *sm, const char *name)
     if (sm->scenes_count >= sm->scenes_capacity)
     {
         sm->scenes_capacity *= 2;
-        sm->scenes = realloc(sm->scenes, sizeof(scene_t) * sm->scenes_capacity);
+        scene_t *new_scenes = realloc(sm->scenes, sizeof(scene_t) * sm->scenes_capacity);
+        if (!new_scenes)
+        {
+            return handle_create(0, 0);
+        }
+        sm->scenes = new_scenes;
     }
 
     handle_t handle = handle_create(sm->scenes_count++, 1);
 
     sm->scenes[handle_get_index(handle)] = (scene_t){
-        .r = 1,
-        .g = 1,
+        .r = 0,
+        .g = 0,
         .b = 0};
     strncpy(sm->scenes[handle_get_index(handle)].name, name, 63);
     sm->scenes[handle_get_index(handle)].name[63] = '\0';
@@ -77,14 +82,33 @@ scene_t *scene_manager_get_current_scene(scene_manager_t *sm)
 {
     if (!sm)
         return NULL;
-    return &sm->scenes[handle_get_index(sm->scene_current)];
+
+    u32 index = handle_get_index(sm->scene_current);
+
+    if (index >= sm->scenes_count)
+        return NULL;
+
+    return &sm->scenes[index];
 }
 
 scene_t *scene_manager_get_scene(scene_manager_t *sm, handle_t handle_scene)
 {
     if (!sm)
         return NULL;
-    return &sm->scenes[handle_get_index(handle_scene)];
+
+    u32 index = handle_get_index(handle_scene);
+
+    if (index >= sm->scenes_count)
+        return NULL;
+
+    return &sm->scenes[index];
+}
+
+handle_t scene_manager_get_handle_current_scene(scene_manager_t *sm)
+{
+    if (!sm) return handle_create(0, 0);
+
+    return sm->scene_current;
 }
 
 void scene_manager_swap_current_scene(scene_manager_t *sm, handle_t handle_scene)
