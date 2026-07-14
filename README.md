@@ -46,7 +46,7 @@ Cada subsistema é opaco (struct definidas em `.c`, não no header), expondo ape
 
 ### Opaque Types
 
-Todas as structs principais (`window_t`, `renderer_t`, `input_t`, `script_t`, `scene_manager_t`) são definidas apenas nos arquivos `.c` correspondentes. Headers expõem apenas ponteiros opacos (`typedef struct renderer_t renderer_t;`). Isso protege o encapsulamento e permite更改 interna sem quebrar binários.
+Todas as structs principais (`window_t`, `renderer_t`, `input_t`, `script_t`, `scene_manager_t`) são definidas apenas nos arquivos `.c` correspondentes. Headers expõem apenas ponteiros opacos (`typedef struct renderer_t renderer_t;`). Isso protege o encapsulamento e permite interna sem quebrar binários.
 
 ### Handle System
 
