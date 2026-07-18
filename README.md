@@ -1,5 +1,7 @@
 # Monny Engine
 
+![Static Badge](https://img.shields.io/badge/Parado-%2523?style=flat-square&color=%23FF8811)
+
 Engine de jogo 2D open-source escrita em C, diseñada para ser leve, modular e extensível via scripts Lua.
 
 ## Dependências
